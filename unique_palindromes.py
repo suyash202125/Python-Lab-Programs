@@ -1,4 +1,4 @@
-# Program to find all the unique palindromes of a string.
+# Program to find all the "unique palindromes" of a string.
 
 # function to find unique palindromes
 def find_unique_palindromes(mystr) :
