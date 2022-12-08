@@ -1,49 +1,44 @@
-#function to find the sequence of jobs
-def job_seq(arr, max_deadline):
-    m = len(arr)
-    # Sort all jobs in decreasing order of profits
-    arr.sort(key = lambda i : i[1], reverse = True)
+from dataclasses import dataclass
+
+@dataclass
+class Job:
+
+    job_id : str
+    deadline : int
+    profit : int
+
     
-    # To store result
-    job_schedule = [None]*max_deadline
-    count = 0
+def jobSequencing(jobs):
+# sort jobs by profit in descending order
+    jobs.sort(key=lambda x: x.profit, reverse=True)
 
-    for item in arr:
-        #loop exit condition
-        if count >= max_deadline:
-            break
+    #printing total jobs after sorting
+    #in decreasing order of profit
+    jobs_sorted = []
+    print("Sorted job list:")
+    for item in jobs:
+        jobs_sorted.append((item.job_id, item.deadline, item.profit))
+    print(jobs_sorted,"\n\nThe scheduled jobs:")
+        
+    # initialize result array with None
+    # for schedules where jobs can not be
+    # performed it will return 'None' at that place
+    result = ['None'] * len(jobs)
 
-        # Find a free slot
-        for i in range(item[2] - 1, -1, -1):
-            if job_schedule[i] is None:
-                job_schedule[i] = (item[0], item[1])
+    # traverse jobs in sorted order
+    for job in jobs:
+        # find the first empty slot from the deadline
+        for i in range(min(job.deadline, len(jobs))-1, -1, -1):
+            # if slot is empty, add job to it
+            if result[i] == 'None':
+                result[i] = job.job_id 
                 break
-    # return job schedule
-    return job_schedule
+  
+    return result
 
 
-#Driver Code
-n = int(input("Enter total number of jobs: "))
-print("\n")
+#test the function
+jobs = [Job('J1', 2, 100), Job('J2', 1, 19), Job('J3', 2, 27),
+        Job('J4', 1, 25), Job('J5', 3, 15)]
 
-#profit input
-profit = []
-for i in range(n):
-    p = int(input(f"Enter the profit for 'job{i+1}': "))
-    profit.append(p)
-print("\nThe list of profit:",profit)
-print("\n")
-
-#deadline input
-deadline = []
-for j in range(n):
-    d = int(input(f"Enter the deadline for 'job{j+1}': "))
-    deadline.append(d)
-print("\nThe list of deadline:", deadline)
-
-# print list of tuples (job id, profit, deadline) using list comprehension
-s_a = [(f'job{i+1}', profit[i], deadline[i]) for i in range(n)]
-print("\nThe list of tuples: ", s_a)
-
-#calling the function and printing sequence of jobs
-print("\nThe job execution will takes place in this order:", job_seq(s_a, max(deadline)))
+print(jobSequencing(jobs))
